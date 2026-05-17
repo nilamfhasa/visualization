@@ -21,6 +21,9 @@
   --sans:       'Sora', sans-serif;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
 html, body {
   overflow-x: hidden;
   width: 100%;
@@ -140,4 +143,20 @@ html, body {
 }
 @media (max-width: 768px) {
   .nav-links { display: none; } /* Mobile menu could be added here */
+}
+
+/* GLOBAL PAGE ENTRANCE ANIMATIONS */
+main, .game-viewport {
+  animation: pageFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pageFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
