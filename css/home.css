@@ -61,7 +61,7 @@
   justify-content: center;
   background: radial-gradient(circle at center, #101a2b 0%, var(--bg) 100%);
 }
-.viewer-bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,204,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,204,0.02) 1px, transparent 1px); background-size: 40px 40px; }
+.viewer-bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,229,204,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,204,0.02) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
 #viewerCanvas { width: 100%; height: 500px; cursor: grab; display: block; }
 .viewer-hint { position: absolute; bottom: 20px; font-family: var(--mono); font-size: 10px; color: var(--text3); background: rgba(8,12,20,0.7); padding: 6px 16px; border-radius: 30px; backdrop-filter: blur(5px); border: 1px solid var(--border); }
 
@@ -133,13 +133,94 @@
 .pt-element.post-transition { border-top: 3px solid #2ecc71; }
 
 /* FORMULA BUILDER UI */
-.formula-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 25px; display: flex; flex-direction: column; align-items: center; }
-.formula-label { font-family: var(--mono); font-size: 11px; color: var(--text3); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 2px; }
+.formula-section { 
+  background: var(--surface); 
+  border: 1px solid var(--border); 
+  border-radius: 16px; 
+  padding: 15px 20px; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  margin-bottom: 25px;
+}
+.formula-label { 
+  font-family: var(--mono); 
+  font-size: 11px; 
+  color: var(--text3); 
+  text-transform: uppercase; 
+  margin-bottom: 8px; 
+  letter-spacing: 2px; 
+}
 #formulaDisplay {
-  background: var(--bg); border: 1px solid var(--border2); border-radius: 12px; padding: 20px 40px;
-  font-family: var(--mono); font-size: 32px; font-weight: 700; color: var(--cyan); text-align: center;
-  min-height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
-  text-shadow: 0 0 20px var(--cyan-glow); width: 100%; max-width: 600px;
+  background: rgba(8, 12, 20, 0.6); 
+  border: 1px solid var(--border2); 
+  border-radius: 12px; 
+  padding: 10px 25px;
+  font-family: var(--mono); 
+  font-size: 26px; 
+  font-weight: 700; 
+  color: var(--cyan); 
+  text-align: center;
+  min-height: 55px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  margin-bottom: 15px;
+  text-shadow: 0 0 15px var(--cyan-glow); 
+  width: 100%; 
+  max-width: 600px;
+}
+.formula-actions {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px;
+  justify-content: center;
+}
+.formula-btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  outline: none;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.clear-btn {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.3);
+  color: #e74c3c;
+}
+.clear-btn:hover {
+  background: #e74c3c;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+  transform: translateY(-2px);
+}
+.clear-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+.render-btn {
+  background: rgba(0, 210, 255, 0.1);
+  border-color: rgba(0, 210, 255, 0.3);
+  color: #00d2ff;
+}
+.render-btn:hover {
+  background: #00d2ff;
+  color: #080c14;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+  transform: translateY(-2px);
+}
+.render-btn:active {
+  transform: translateY(0) scale(0.97);
 }
 
 @media (max-width: 1200px) {
@@ -147,7 +228,157 @@
   .info-section { grid-column: 1 / -1; border-left: none; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 768px) {
-  .main-panel { grid-template-columns: 1fr; }
-  #viewerCanvas { height: 350px; }
-  .info-section { grid-template-columns: 1fr; }
+  .hero { height: 100px; }
+  .hero-label { font-size: 8px; margin-bottom: 6px; letter-spacing: 2px; }
+  .hero-title { font-size: 18px; margin-bottom: 4px; }
+  .hero-sub { display: none !important; }
+  
+  .main-panel { display: flex; flex-direction: column; min-height: auto; }
+  
+  /* 1. Formula & Notation Cards Side-by-Side (50/50) at the very top */
+  .side-panel {
+    order: 1;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: row !important;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: stretch;
+  }
+  .side-panel .section-label {
+    display: none !important;
+  }
+  .side-panel h3 {
+    display: none !important;
+  }
+  .active-mol-display, .info-geo {
+    flex: 1;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 6px 8px !important;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    box-sizing: border-box;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+  }
+  #activeMolFormula { font-size: 18px; font-weight: bold; margin-bottom: 2px; color: var(--cyan); text-shadow: 0 0 10px var(--cyan-glow); }
+  #activeMolName { font-size: 10px; color: var(--text2); }
+  .info-geo-name { font-size: 11px; font-weight: bold; margin-bottom: 2px; text-align: center; color: var(--cyan); }
+  .info-geo-axe { font-size: 10px; color: var(--text2); }
+  
+  /* 2. 3D Viewer Canvas in the middle */
+  .viewer-section { order: 2; min-height: 240px; }
+  #viewerCanvas { height: 240px; }
+  .viewer-hint { font-size: 8px; padding: 4px 12px; bottom: 10px; }
+  
+  /* 3. Detailed Explanation Section at the bottom of panel, matching SS exactly */
+  .info-section {
+    order: 3;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    padding: 20px 15px;
+    gap: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .info-section .section-label {
+    font-size: 10px;
+    margin-bottom: 12px;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  .info-section .section-label::after { display: none !important; }
+  
+  .info-stats {
+    display: flex;
+    flex-direction: row !important;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .stat-box {
+    flex: 1;
+    padding: 10px 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .stat-val {
+    font-size: 22px;
+    font-weight: bold;
+    font-family: 'Space Mono', monospace;
+    color: var(--cyan);
+    margin-bottom: 2px;
+    text-shadow: 0 0 10px var(--cyan-glow);
+  }
+  .stat-lbl {
+    font-size: 9px;
+    font-family: 'Space Mono', monospace;
+    color: #a0aab8;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .info-angles {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: 'Sora', sans-serif;
+  }
+  
+  .info-desc {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 4px solid var(--cyan);
+    border-right: 4px solid var(--cyan);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: #a0aab8;
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
+    margin: 0;
+    font-family: 'Sora', sans-serif;
+  }
+  
+  /* 4. Selector Tabs side-by-side in one row */
+  .selector-section { padding: 15px 8px 25px; }
+  .tab-toggle {
+    flex-direction: row !important;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+    padding: 10px;
+    font-size: 10px;
+    text-align: center;
+  }
+  .mol-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+  .mol-card { padding: 10px 8px; border-radius: 10px; }
+  .mol-name { font-size: 11px; }
+  .mol-formula { font-size: 10px; }
+  
+  .periodic-table-wrapper { padding: 8px; border-radius: 10px; margin-top: 15px; }
+  .formula-section { padding: 12px 10px; border-radius: 12px; margin-bottom: 0; }
+  #formulaDisplay { font-size: 18px; min-height: 40px; padding: 6px 12px; margin-bottom: 10px; }
+  .formula-actions { gap: 10px; width: 100%; }
+  .formula-btn { flex: 1; padding: 8px 10px; font-size: 11px; border-radius: 15px; }
 }

@@ -115,9 +115,10 @@ html, body {
   z-index: 9999;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-.toast-overlay.show { opacity: 1; }
+.toast-overlay.show { opacity: 1; visibility: visible; }
 .toast-box {
   background: var(--surface);
   border: 1px solid var(--border2);
@@ -141,13 +142,82 @@ html, body {
   .nav-links { gap: 16px; }
   .nav-link { font-size: 11px; }
 }
+
+/* HAMBURGER TOGGLE STYLE */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.nav-toggle .bar {
+  width: 100%;
+  height: 2px;
+  background-color: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.3, 1);
+}
+
 @media (max-width: 768px) {
-  .nav-links { display: none; } /* Mobile menu could be added here */
+  .nav-toggle {
+    display: flex;
+  }
+  
+  .nav-toggle.open .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .nav-toggle.open .bar:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .nav-toggle.open .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    background: rgba(10, 10, 15, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 24px;
+    gap: 20px;
+    box-sizing: border-box;
+    z-index: 999;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  }
+  
+  .nav-links.show {
+    display: flex;
+  }
+  
+  .nav-link {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .nav-link:last-child {
+    border-bottom: none;
+  }
 }
 
 /* GLOBAL PAGE ENTRANCE ANIMATIONS */
 main, .game-viewport {
-  animation: pageFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: pageFadeUp 1.2s cubic-bezier(0.25, 1, 0.3, 1) forwards;
 }
 
 @keyframes pageFadeUp {

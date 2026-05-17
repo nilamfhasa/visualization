@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VSEPR 3D Explorer - Materi Pembelajaran</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/global.css">
+  <style>
+    body {
+      background: #080c14;
+      color: var(--text);
+      font-family: 'Sora', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Background Grid */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Page Header */
+    .header-section {
+      text-align: center;
+      padding: 60px 20px 30px;
+      position: relative;
+    }
+    .header-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+    .header-title {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin: 0;
+      color: #fff;
+    }
+    .header-title span {
+      background: linear-gradient(135deg, var(--cyan) 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header-sub {
+      color: var(--text2);
+      font-size: 14px;
+      margin-top: 10px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      opacity: 0.8;
+    }
+
+    /* Control Bar */
+    .control-bar {
+      max-width: 1200px;
+      margin: 0 auto 30px;
+      padding: 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      max-width: 400px;
+      min-width: 250px;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px 12px 40px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    .search-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.15);
+      outline: none;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .btn-add-material {
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .btn-add-material:hover {
+      background: var(--cyan);
+      color: #000;
+      box-shadow: 0 0 25px rgba(0, 210, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Materials Grid */
+    .materials-grid {
+      max-width: 1200px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+    }
+
+    .material-card {
+      background: rgba(13, 20, 32, 0.45);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .material-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan) 0%, #a855f7 100%);
+      opacity: 0.7;
+    }
+
+    .material-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0, 210, 255, 0.4);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 210, 255, 0.1);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .card-category {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #a855f7;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-formula-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.2);
+      color: var(--cyan);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 12px;
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 20px;
+      opacity: 0.85;
+      text-align: justify;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-delete {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      font-size: 12px;
+      font-family: var(--mono);
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+    .btn-delete:hover {
+      opacity: 1;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Modal dialog */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .modal-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: rgba(13, 20, 32, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 550px;
+      box-sizing: border-box;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 50px rgba(0, 210, 255, 0.1);
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+    .modal-overlay.show .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 24px 30px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text3);
+      font-size: 24px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .modal-close:hover {
+      color: #fff;
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text2);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .form-input, .form-textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      box-sizing: border-box;
+      transition: 0.3s;
+    }
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--cyan);
+      outline: none;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: var(--mono);
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: 0.2s;
+    }
+    .btn-cancel:hover {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+    }
+    .btn-submit {
+      background: var(--cyan);
+      border: none;
+      color: #000;
+      font-family: var(--mono);
+      font-weight: 700;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: 0.2s;
+      box-shadow: 0 4px 15px rgba(0, 210, 255, 0.2);
+    }
+    .btn-submit:hover {
+      box-shadow: 0 0 25px rgba(0, 210, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text3);
+      font-family: var(--mono);
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .materials-grid {
+        grid-template-columns: 1fr;
+      }
+      .header-title {
+        font-size: 32px;
+      }
+      .control-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-wrapper {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+
+  <!-- NAVIGATION -->
+  <nav class="main-nav">
+    <a href="../index.html" class="nav-logo">VSEPR<span>3D</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <div class="nav-links">
+      <a href="../index.html" class="nav-link">Home</a>
+      <a href="index.html" class="nav-link active">Materi</a>
+      <a href="../game/index.html" class="nav-link">Game</a>
+      <a href="../quiz/index.html" class="nav-link">Quiz</a>
+      <a href="../about/index.html" class="nav-link">About</a>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="header-section">
+    <div class="header-label">Education Module</div>
+    <h1 class="header-title">Materi <span>Kimia</span> Molekuler</h1>
+    <p class="header-sub">Pelajari dasar struktur VSEPR, hibridisasi orbital, dan ikatan kimia melalui modul bacaan tepercaya.</p>
+  </header>
+
+  <!-- CONTROLS -->
+  <section class="control-bar">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Cari materi berdasarkan judul atau rumus...">
+    </div>
+    <button class="btn-add-material" id="btnAddMaterial">
+      <span>+</span> Tambah Materi
+    </button>
+  </section>
+
+  <!-- MATERIALS GRID -->
+  <main class="materials-grid" id="materialsGrid">
+    <!-- Rendered dynamically -->
+  </main>
+
+  <!-- ADD MATERIAL MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">Tambah Materi Baru</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="materialForm" onsubmit="event.preventDefault();">
+          <div class="form-group">
+            <label class="form-label" for="matTitle">Judul Materi</label>
+            <input type="text" id="matTitle" class="form-input" placeholder="Contoh: Ikatan Kovalen Koordinasi" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="matCategory">Subjudul / Kategori</label>
+            <input type="text" id="matCategory" class="form-input" placeholder="Contoh: Kimia Anorganik Dasar" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="matFormula">Rumus Kimia Terkait</label>
+            <input type="text" id="matFormula" class="form-input" placeholder="Contoh: NH3 / H2O" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="matDesc">Konten Materi Lengkap</label>
+            <textarea id="matDesc" class="form-textarea" placeholder="Tulis penjelasan tepercaya dan mendalam mengenai topik materi ini..." required></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" id="btnCancel">Batal</button>
+            <button type="submit" class="btn-submit">Simpan Materi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-overlay" id="toastOverlay">
+    <div class="toast-box">
+      <div class="toast-icon">✓</div>
+      <div class="toast-msg">Materi berhasil disimpan!</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="margin-top: auto; padding: 30px; text-align: center; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text3);">
+    &copy; 2026 VSEPR 3D Explorer &bull; Interactive Academic Library
+  </footer>
+
+  <script>
+    // Seeding default premium lessons
+    const DEFAULT_MATERIALS = [
+      {
+        id: "default_vsepr",
+        title: "Teori VSEPR & Geometri Molekul",
+        category: "Dasar Struktur Kimia",
+        formula: "H2O / CO2",
+        desc: "Teori VSEPR (Valence Shell Electron Pair Repulsion) adalah model kimia yang digunakan untuk memprediksi bentuk geometri molekul berdasarkan gaya tolakan elektrostatik antara pasangan elektron kulit valensi di sekitar atom pusat. Prinsip utamanya adalah bahwa pasangan elektron (baik pasangan elektron ikatan/PEI maupun pasangan elektron bebas/PEB) akan menolak satu sama lain dan menempatkan diri sejauh mungkin dalam ruang tiga dimensi untuk meminimalkan tolakan tersebut. Hal ini menjelaskan mengapa molekul dengan jumlah domain yang sama dapat memiliki geometri berbeda akibat keberadaan pasangan bebas yang menekan ikatan kimia."
+      },
+      {
+        id: "default_hbond",
+        title: "Gaya Antarmolekul & Ikatan Hidrogen",
+        category: "Gaya Tarik Menarik Spasial",
+        formula: "H2O / NH3",
+        desc: "Gaya antarmolekul adalah gaya tarik-menarik elektrostatik yang terjadi di antara molekul-molekul tetangga. Salah satu gaya terkuat adalah Ikatan Hidrogen, yang terbentuk secara khusus ketika atom Hidrogen yang berikatan kovalen polar dengan atom berkeelektronegatifan sangat tinggi (seperti Nitrogen, Oksigen, atau Fluor) ditarik oleh pasangan elektron bebas (PEB) milik atom elektronegatif pada molekul tetangga. Gaya ini menghasilkan sifat fisik unik, seperti titik didih air (H₂O) dan amonia (NH₃) yang anomalously sangat tinggi dibandingkan senyawa hidrida segolongannya."
+      }
+    ];
+
+    let materials = [];
+
+    // Initialize Materials
+    function initMaterials() {
+      const stored = localStorage.getItem('chemical_materials');
+      if (stored) {
+        materials = JSON.parse(stored);
+      } else {
+        materials = [...DEFAULT_MATERIALS];
+        localStorage.setItem('chemical_materials', JSON.stringify(materials));
+      }
+      renderMaterials();
+    }
+
+    // Render Materials grid
+    function renderMaterials(filterQuery = '') {
+      const grid = document.getElementById('materialsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const query = filterQuery.toLowerCase().trim();
+      const filtered = materials.filter(m => 
+        m.title.toLowerCase().includes(query) || 
+        m.category.toLowerCase().includes(query) ||
+        m.formula.toLowerCase().includes(query) ||
+        m.desc.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-state">Tidak ada materi yang cocok dengan pencarian "${filterQuery}"</div>`;
+        return;
+      }
+
+      filtered.forEach(m => {
+        const isDefault = m.id.startsWith('default_');
+        const card = document.createElement('article');
+        card.className = 'material-card';
+        card.innerHTML = `
+          <div class="card-meta">
+            <span class="card-category">${escapeHtml(m.category)}</span>
+            <span class="card-formula-tag">${escapeHtml(m.formula)}</span>
+          </div>
+          <h3 class="card-title">${escapeHtml(m.title)}</h3>
+          <p class="card-desc">${escapeHtml(m.desc)}</p>
+          <div class="card-actions">
+            <span style="font-family: var(--mono); font-size: 10px; color: var(--text3); font-weight: bold;">
+              ${isDefault ? '🔐 DEFAULT MATERI' : '📂 USER ADDED'}
+            </span>
+            ${!isDefault ? `<button class="btn-delete" onclick="deleteMaterial('${m.id}')">Hapus</button>` : ''}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Add New Material
+    function saveNewMaterial(title, category, formula, desc) {
+      const newMat = {
+        id: 'user_' + Date.now(),
+        title: title,
+        category: category,
+        formula: formula,
+        desc: desc
+      };
+      materials.push(newMat);
+      localStorage.setItem('chemical_materials', JSON.stringify(materials));
+      renderMaterials();
+      showToast('Materi berhasil ditambahkan!');
+    }
+
+    // Delete Material
+    window.deleteMaterial = function(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus materi ini?')) {
+        materials = materials.filter(m => m.id !== id);
+        localStorage.setItem('chemical_materials', JSON.stringify(materials));
+        renderMaterials(document.getElementById('searchInput').value);
+        showToast('Materi berhasil dihapus!');
+      }
+    };
+
+    // Helper: Toast
+    function showToast(msg) {
+      const toast = document.getElementById('toastOverlay');
+      if (!toast) return;
+      toast.querySelector('.toast-msg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // Helper: Escape HTML
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Setup interactive events
+    document.addEventListener('DOMContentLoaded', () => {
+      initMaterials();
+
+      // Search event
+      document.getElementById('searchInput')?.addEventListener('input', (e) => {
+        renderMaterials(e.target.value);
+      });
+
+      // Modal handles
+      const modal = document.getElementById('modalOverlay');
+      const btnAdd = document.getElementById('btnAddMaterial');
+      const btnClose = document.getElementById('modalClose');
+      const btnCancel = document.getElementById('btnCancel');
+      const form = document.getElementById('materialForm');
+
+      function openModal() {
+        modal?.classList.add('show');
+        form?.reset();
+      }
+      function closeModal() {
+        modal?.classList.remove('show');
+      }
+
+      btnAdd?.addEventListener('click', openModal);
+      btnClose?.addEventListener('click', closeModal);
+      btnCancel?.addEventListener('click', closeModal);
+      
+      modal?.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      // Form Submit
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('matTitle').value;
+        const category = document.getElementById('matCategory').value;
+        const formula = document.getElementById('matFormula').value;
+        const desc = document.getElementById('matDesc').value;
+
+        if (title && category && formula && desc) {
+          saveNewMaterial(title, category, formula, desc);
+          closeModal();
+        }
+      });
+
+      // Mobile Navbar toggle
+      const navToggle = document.getElementById('navToggle');
+      const navLinks = document.querySelector('.nav-links');
+      if (navToggle && navLinks) {
+        navToggle.addEventListener('click', () => {
+          navToggle.classList.toggle('open');
+          navLinks.classList.toggle('open');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

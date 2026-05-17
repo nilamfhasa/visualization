@@ -1,0 +1,17 @@
+.DS_Store
+Thumbs.db
+.DS_Store?
+ehthumbs.db
+Icon?
+.spotlight-v100
+.Trashes
+js/.DS_Store
+materi/.DS_Store
+about/.DS_Store
+css/.DS_Store
+game/.DS_Store
+quiz/.DS_Store
+.tempmediaStorage/
+*~
+*.swp
+*.swo

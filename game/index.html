@@ -38,23 +38,154 @@
       border-radius: 8px;
     }
     .overlay-content { text-align: center; }
-    .overlay-content h1 { font-family: 'Space Mono', monospace; font-size: 48px; color: #00d2ff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 4px; }
+    .overlay-content h1 { font-family: 'Space Mono', monospace; font-size: 48px; color: var(--cyan); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 4px; }
     .start-btn {
-      background: #00d2ff; color: #000; border: none; padding: 15px 50px;
+      background: var(--cyan); color: #000; border: none; padding: 15px 50px;
       font-family: 'Space Mono', monospace; font-weight: 700; font-size: 18px;
       border-radius: 8px; cursor: pointer; transition: 0.2s;
     }
-    .start-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(0,210,255,0.5); }
+    .start-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px var(--cyan-glow); }
     
     .nav-back { position: absolute; top: 20px; right: 20px; color: #555; text-decoration: none; font-size: 14px; }
+
+    /* MOBILE RESPONSIVE CANVAS & ON-SCREEN CONTROLS */
+    @media (max-width: 900px) {
+      #gameCanvas {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 700px;
+        max-height: 85vh;
+      }
+      .canvas-wrapper {
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: center;
+      }
+      .game-container {
+        margin: 10px auto;
+        border-radius: 12px;
+      }
+      .control-guide {
+        display: none !important;
+      }
+    }
+
+    /* TOUCH CONTROLS FOR MOBILE */
+    .touch-controls {
+      display: none;
+      position: fixed;
+      bottom: 35px;
+      left: 35px;
+      right: 35px;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    .touch-left-side, .touch-right-side {
+      display: flex;
+      gap: 15px;
+      pointer-events: auto;
+    }
+
+    .touch-btn {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.6);
+      font-family: var(--sans);
+      font-size: 22px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+    }
+
+    .touch-btn:active {
+      background: rgba(0, 210, 255, 0.25);
+      border-color: #00d2ff;
+      color: #00d2ff;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+      transform: scale(0.9);
+    }
+
+    #touchSwap {
+      background: rgba(0, 210, 255, 0.08);
+      border-color: rgba(0, 210, 255, 0.3);
+      color: rgba(0, 210, 255, 0.8);
+      font-size: 18px;
+      font-family: var(--mono);
+    }
+
+    #touchJump {
+      background: rgba(241, 196, 15, 0.08);
+      border-color: rgba(241, 196, 15, 0.3);
+      color: rgba(241, 196, 15, 0.8);
+    }
+
+    @media (max-width: 900px) {
+      .touch-controls {
+        display: flex;
+      }
+    }
+
+    /* PORTRAIT ORIENTATION WARNING FOR MOBILE */
+    .orientation-warning {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #080c14;
+      z-index: 900;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      color: white;
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      .orientation-warning {
+        display: flex;
+      }
+    }
+
+    @keyframes rotate-pulse {
+      0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+      50% { transform: scale(1.1) rotate(15deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Screen Orientation Warning for Portrait Mobile -->
+  <div class="orientation-warning">
+    <div style="font-size: 36px; margin-bottom: 15px; animation: rotate-pulse 2s infinite ease-in-out; opacity: 0.85;">🔄</div>
+    <h2 style="font-size: 18px; font-weight: bold; color: var(--cyan); margin-bottom: 8px; font-family: 'Sora', sans-serif; opacity: 0.8;">Rotate Your Phone</h2>
+    <p style="font-size: 11px; color: #a0aab8; line-height: 1.4; max-width: 240px; font-family: 'Sora', sans-serif; margin: 0; opacity: 0.6;">You must rotate your phone to landscape mode to play this game.</p>
+  </div>
+
   <nav class="main-nav">
     <a href="../index.html" class="nav-logo">VSEPR<span>3D</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
     <div class="nav-links">
       <a href="../index.html" class="nav-link">Home</a>
+      <a href="../materi/index.html" class="nav-link">Materi</a>
       <a href="index.html" class="nav-link active">Game</a>
       <a href="../quiz/index.html" class="nav-link">Quiz</a>
       <a href="../about/index.html" class="nav-link">About</a>
@@ -62,29 +193,103 @@
   </nav>
 
   <div class="game-viewport">
+    <!-- On-Screen Touch Controls for Mobile (Fixed Outside Canvas) -->
+    <div class="touch-controls" id="touchControls">
+      <div class="touch-left-side">
+        <button class="touch-btn" id="touchLeft">←</button>
+        <button class="touch-btn" id="touchRight">→</button>
+      </div>
+      <div class="touch-right-side">
+        <button class="touch-btn" id="touchSwap">C</button>
+        <button class="touch-btn" id="touchJump">↑</button>
+      </div>
+    </div>
+
     <div style="display: flex; flex-direction: column; align-items: center;">
       <div id="gameContainer" class="canvas-wrapper">
         <canvas id="gameCanvas" width="800" height="600"></canvas>
         
         <div id="gameOverlay" class="game-overlay">
-          <div class="overlay-content">
-            <h1>THE RUST TOWER</h1>
-            <p style="margin-bottom: 25px; color: #aaa;">Misi: Taklukkan Menara Karat & Capai Pintu Exit!</p>
-            <input type="text" id="playerNameInput" placeholder="Masukkan Nama Pemain..." maxlength="20" style="display: block; width: 300px; margin: 0 auto 25px auto; padding: 12px 20px; font-family: 'Space Mono', monospace; font-size: 14px; font-weight: bold; text-align: center; border: 1px solid #444; border-radius: 30px; background: rgba(255, 255, 255, 0.05); color: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.3); outline: none; transition: 0.3s;" onfocus="this.style.borderColor='#00d2ff'; this.style.boxShadow='0 0 15px rgba(0,210,255,0.3)';" onblur="this.style.borderColor='#444'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.3)';" />
-            <button id="btnStart" class="start-btn">MASUK MENARA</button>
+          <!-- SCREEN 1: LOGIN/INTRO -->
+          <div class="overlay-content" id="introScreen">
+            <h1>MOLECULAR ADVENTURE</h1>
+            <p style="margin-bottom: 25px; color: #aaa;">Misi: Kuasai Geometri Molekul & Pecahkan Tantangan Kimia!</p>
+            <input type="text" id="playerNameInput" placeholder="Masukkan Nama Pemain..." maxlength="20" style="display: block; width: 300px; margin: 0 auto 25px auto; padding: 12px 20px; font-family: 'Space Mono', monospace; font-size: 14px; font-weight: bold; text-align: center; border: 1px solid #444; border-radius: 30px; background: rgba(255, 255, 255, 0.05); color: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.3); outline: none; transition: 0.3s;" onfocus="this.style.borderColor='var(--cyan)'; this.style.boxShadow='0 0 15px var(--cyan-glow)';" onblur="this.style.borderColor='#444'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.3)';" />
+            <button id="btnNext" class="start-btn">MASUK GAME</button>
+          </div>
+
+          <!-- SCREEN 2: HOW TO PLAY GUIDE -->
+          <div class="overlay-content hidden" id="guideScreen" style="max-width: 520px; text-align: left; margin: 0 auto; background: rgba(10, 15, 25, 0.95); border: 1px solid var(--border); border-radius: 16px; padding: 25px 35px; box-shadow: 0 15px 50px rgba(0,0,0,0.8);">
+            <h2 style="font-family: 'Space Mono', monospace; font-size: 22px; color: var(--cyan); text-align: center; margin-bottom: 20px; letter-spacing: 2px;">⚡ PANDUAN BERMAIN</h2>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px; font-size: 13px; line-height: 1.6; color: #ccc; margin-bottom: 25px; font-family: 'Sora', sans-serif;">
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="font-size: 18px;">🕹️</span>
+                <div>
+                  <strong style="color: #fff; display: block; margin-bottom: 2px;">Pergerakan Karakter</strong>
+                  Gunakan tombol <span style="font-family: var(--mono); color: var(--cyan); background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; font-size: 11px;">WASD</span> atau <span style="font-family: var(--mono); color: var(--cyan); background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; font-size: 11px;">Tombol Arah</span> untuk berlari dan melompat.
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="font-size: 18px;">🧪</span>
+                <div>
+                  <strong style="color: #fff; display: block; margin-bottom: 2px;">Kekuatan Molekul & Swap</strong>
+                  Tekan tombol <span style="font-family: var(--mono); color: #a855f7; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; font-size: 11px;">C</span> untuk menukar molekul aktif. Setiap molekul memiliki kekuatan spasial unik:
+                  <ul style="margin: 5px 0 0 15px; padding: 0; list-style-type: square; color: #aaa;">
+                    <li><strong style="color: var(--cyan);">H₂O</strong>: Memadamkan kobaran api & menetralisir genangan asam.</li>
+                    <li><strong style="color: #f1c40f;">CO₂</strong>: Membekukan cairan asam menjadi jembatan keras.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="font-size: 18px;">⚠️</span>
+                <div>
+                  <strong style="color: #f1c40f; display: block; margin-bottom: 2px;">Sistem Penalti & Bahaya</strong>
+                  Menabrak rintangan atau genangan asam dengan molekul yang salah akan memberikan <span style="color: #e74c3c; font-weight: bold;">PENALTI</span> berupa pengurangan darah (HP) atau kematian instan!
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="font-size: 18px;">🚀</span>
+                <div>
+                  <strong style="color: #fff; display: block; margin-bottom: 2px;">Restart Rute</strong>
+                  Tekan tombol <span style="font-family: var(--mono); color: #f1c40f; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; font-size: 11px;">Spacebar</span> untuk merestart stage jika terjebak.
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align: center;">
+              <button id="btnStart" class="start-btn" style="width: 100%;">MULAI PETUALANGAN →</button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- PANDUAN KONTROL -->
-      <div class="control-guide" style="width: 800px; box-sizing: border-box; margin-top: 15px; display: flex; justify-content: space-around; align-items: center; padding: 12px 20px; background: rgba(20, 25, 35, 0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; backdrop-filter: blur(10px); font-family: 'Space Mono', monospace; font-size: 11px; color: #bdc3c7; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-        <div>🎮 <span style="color: #fff; font-weight: bold;">GERAKAN:</span> WASD / ← ↑ ↓ →</div>
-        <div>🧪 <span style="color: #00d2ff; font-weight: bold;">SWAP MOLEKUL:</span> Tombol C (Change Power)</div>
-        <div>🚀 <span style="color: #f1c40f; font-weight: bold;">RESTART RUN:</span> Tombol Spacebar</div>
       </div>
     </div>
   </div>
 
   <script src="game.js"></script>
+  <script>
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.querySelector('.nav-links');
+    if (navToggle && navLinks) {
+      navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('open');
+        navLinks.classList.toggle('show');
+      });
+    }
+
+    // Toggle Intro & Guide Screens
+    const btnNext = document.getElementById('btnNext');
+    const introScreen = document.getElementById('introScreen');
+    const guideScreen = document.getElementById('guideScreen');
+    if (btnNext && introScreen && guideScreen) {
+      btnNext.addEventListener('click', () => {
+        introScreen.classList.add('hidden');
+        guideScreen.classList.remove('hidden');
+      });
+    }
+  </script>
 </body>
 </html>

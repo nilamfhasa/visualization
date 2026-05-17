@@ -15,8 +15,14 @@
 
   <nav class="main-nav">
     <a href="index.html" class="nav-logo">VSEPR<span>3D</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
     <div class="nav-links">
       <a href="index.html" class="nav-link active">Home</a>
+      <a href="materi/index.html" class="nav-link">Materi</a>
       <a href="game/index.html" class="nav-link">Game</a>
       <a href="quiz/index.html" class="nav-link">Quiz</a>
       <a href="about/index.html" class="nav-link">About</a>
@@ -84,6 +90,15 @@
 
       <!-- Builder Content -->
       <div id="periodikBuilder" class="builder-container hidden">
+        <div class="formula-section">
+          <div class="formula-label">Current Formula Builder</div>
+          <div id="formulaDisplay"></div>
+          <div class="formula-actions">
+            <button id="btnClear" class="formula-btn clear-btn">Clear Formula</button>
+            <button id="btnRender" class="formula-btn render-btn">Render Molecule</button>
+          </div>
+        </div>
+
         <div class="periodic-table-wrapper">
           <div class="periodic-table-title">Tabel Periodik Unsur Lengkap</div>
           <div class="periodic-table" id="ptGrid">
@@ -175,15 +190,6 @@
             <div class="pt-element alkaline-earth" data-symbol="Ra" style="grid-column: 2; grid-row: 7;"><span class="pt-number">88</span><span class="pt-symbol">Ra</span><span class="pt-name">Radium</span></div>
           </div>
         </div>
-
-        <div class="formula-section">
-          <div class="formula-label">Current Formula Builder</div>
-          <div id="formulaDisplay"></div>
-          <div class="formula-actions">
-            <button id="btnClear" class="formula-btn clear-btn">Clear Formula</button>
-            <button id="btnRender" class="formula-btn render-btn">Render Molecule</button>
-          </div>
-        </div>
       </div>
     </div>
   </main>
@@ -198,5 +204,15 @@
   <script src="js/shared/chemistry.js"></script>
   <script src="js/shared/engine3d.js"></script>
   <script src="js/home.js"></script>
+  <script>
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.querySelector('.nav-links');
+    if (navToggle && navLinks) {
+      navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('open');
+        navLinks.classList.toggle('show');
+      });
+    }
+  </script>
 </body>
 </html>

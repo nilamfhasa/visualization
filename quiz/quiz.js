@@ -56,12 +56,16 @@ function loadQuestion() {
   // Progress Bar
   document.getElementById('quizProgressFill').style.width = `${((currentQIndex + 1) / quizQuestions.length) * 100}%`;
   
-  // Render 3D Molecule if needed
+  // Render 3D Molecule if needed, otherwise hide the viewer
+  const viewerContainer = document.querySelector('.quiz-viewer-container');
   if (q.type === '3d' && q.molecule) {
+    if (viewerContainer) viewerContainer.style.display = 'block';
     const molData = MOLECULES[q.molecule];
     if (molData && typeof drawQuizMolecule === 'function') {
       drawQuizMolecule(molData);
     }
+  } else {
+    if (viewerContainer) viewerContainer.style.display = 'none';
   }
 
   // Inject Options

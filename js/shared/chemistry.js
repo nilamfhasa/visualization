@@ -46,7 +46,7 @@ const MOLECULES = {
     formula: 'NH₃', name: 'Amonia',
     geo: 'Trigonal Pyramidal', axe: 'AX₃E', pei: 3, peb: 1,
     angles: [{ label: 'Sudut H–N–H', val: '107°' }],
-    desc: 'Satu PEB menekan tiga pasangan ikatan sehingga sudut mengecil menjadi 107°.',
+    desc: 'Amonia memiliki geometri Trigonal Piramida. Satu pasangan elektron bebas (PEB) pada atom Nitrogen memberikan gaya tolakan yang lebih kuat dibandingkan pasangan elektron ikatan (PEI), sehingga sudut ikatan H–N–H menyusut dari ideal 109,5° menjadi sekitar 107°.',
     atoms: [
       { x:0, y:0, z:0, r:0.38, color:'#3498db', symbol:'N' },
       { x:1, y:-0.6, z:0.9, r:0.25, color:'#aaaaaa', symbol:'H' },
@@ -60,7 +60,7 @@ const MOLECULES = {
     formula: 'H₂O', name: 'Air',
     geo: 'Bengkok (Bent)', axe: 'AX₂E₂', pei: 2, peb: 2,
     angles: [{ label: 'Sudut H–O–H', val: '104,5°' }],
-    desc: 'Dua PEB memberikan tekanan besar sehingga sudut ikatan menyempit menjadi 104,5°.',
+    desc: 'Molekul Air memiliki geometri Bengkok (Bent). Keberadaan dua pasangan elektron bebas (PEB) pada atom Oksigen menghasilkan gaya tolakan yang sangat kuat, menekan ikatan O–H ke bawah sehingga sudut ikatan menyempit secara signifikan menjadi 104,5°.',
     atoms: [
       { x:0, y:0, z:0, r:0.38, color:'#e74c3c', symbol:'O' },
       { x:0.95, y:-0.8, z:0, r:0.25, color:'#aaaaaa', symbol:'H' },
@@ -73,7 +73,7 @@ const MOLECULES = {
     formula: 'PCl₅', name: 'Fosfor Pentaklorida',
     geo: 'Trigonal Bipyramidal', axe: 'AX₅', pei: 5, peb: 0,
     angles: [{ label: 'Aksial-Ekuatorial', val: '90°' }, { label: 'Ekuatorial', val: '120°' }],
-    desc: 'Lima domain ikatan tanpa PEB membentuk struktur trigonal bipiramida.',
+    desc: 'Fosfor Pentaklorida memiliki geometri Trigonal Bipyramidal. Lima domain ikatan tanpa PEB tersusun dalam koordinasi ruang aksial (sudut 90° terhadap bidang) dan ekuatorial (sudut 120° di dalam bidang datar), meminimalkan gaya tolak antar domain secara optimal.',
     atoms: [
       { x:0, y:0, z:0, r:0.42, color:'#e67e22', symbol:'P' },
       { x:1.4, y:0, z:0, r:0.32, color:'#2ecc71', symbol:'Cl' },
@@ -88,7 +88,7 @@ const MOLECULES = {
     formula: 'SF₆', name: 'Belerang Heksafluorida',
     geo: 'Oktahedral', axe: 'AX₆', pei: 6, peb: 0,
     angles: [{ label: 'F–S–F', val: '90°' }],
-    desc: 'Enam domain ikatan tersusun simetris membentuk oktahedron sempurna.',
+    desc: 'Belerang Heksafluorida memiliki geometri Oktahedral. Enam domain ikatan terdistribusi secara simetris sempurna di sekitar atom pusat Belerang, menghasilkan sudut ikatan F–S–F yang seragam sebesar 90° dalam struktur tiga dimensi.',
     atoms: [
       { x:0, y:0, z:0, r:0.42, color:'#f39c12', symbol:'S' },
       { x:1.5, y:0, z:0, r:0.30, color:'#27ae60', symbol:'F' },
@@ -103,6 +103,8 @@ const MOLECULES = {
   "XeF4": {
     formula: 'XeF₄', name: 'Xenon Tetrafluorida',
     geo: 'Segiempat Datar', axe: 'AX₄E₂', pei: 4, peb: 2,
+    angles: [{ label: 'F–Xe–F', val: '90°' }],
+    desc: 'Xenon Tetrafluorida memiliki geometri Segiempat Datar (Square Planar). Dengan tipe AX₄E₂, dua pasangan elektron bebas berada pada posisi aksial yang berlawanan untuk meminimalkan tolakan, sementara empat atom Fluor tersusun simetris membentuk sudut 90° pada bidang ekuatorial.',
     atoms: [
       { x:0, y:0, z:0, r:0.45, color:'#9b59b6', symbol:'Xe' },
       { x:1.5, y:0, z:0, r:0.30, color:'#27ae60', symbol:'F' },
@@ -116,6 +118,8 @@ const MOLECULES = {
   "HCl": {
     formula: 'HCl', name: 'Asam Klorida',
     geo: 'Linear', axe: 'AX', pei: 1, peb: 3,
+    angles: [{ label: 'Linear', val: '180°' }],
+    desc: 'Asam Klorida memiliki geometri Linear murni (AX) karena hanya melibatkan dua atom. Meskipun atom Klorin memiliki tiga pasangan elektron bebas (PEB) yang tidak terikat, orientasi spasial antar dua atom selalu membentuk garis lurus.',
     atoms: [
       { x:0, y:0, z:0, r:0.35, color:'#2ecc71', symbol:'Cl' },
       { x:1.4, y:0, z:0, r:0.25, color:'#aaaaaa', symbol:'H' }
@@ -125,12 +129,77 @@ const MOLECULES = {
   "BeCl2": {
     formula: 'BeCl₂', name: 'Berilium Klorida',
     geo: 'Linear', axe: 'AX₂', pei: 2, peb: 0,
+    angles: [{ label: 'Sudut Cl–Be–Cl', val: '180°' }],
+    desc: 'Berilium Klorida memiliki geometri Linear (AX₂). Karena atom pusat Berilium hanya memiliki dua domain elektron ikatan tanpa pasangan elektron bebas, kedua ikatan Be–Cl berorientasi saling bertolak belakang membentuk sudut lurus sempurna sebesar 180°.',
     atoms: [
       { x:0, y:0, z:0, r:0.35, color:'#e67e22', symbol:'Be' },
       { x:1.5, y:0, z:0, r:0.32, color:'#2ecc71', symbol:'Cl' },
       { x:-1.5, y:0, z:0, r:0.32, color:'#2ecc71', symbol:'Cl' }
     ],
     bonds: [[0,1],[0,2]]
+  },
+  "CH2O": {
+    formula: 'CH₂O', name: 'Formaldehida',
+    geo: 'Trigonal Planar', axe: 'AX₃', pei: 3, peb: 0,
+    angles: [{ label: 'Sudut H–C–H', val: '116°' }, { label: 'Sudut H–C–O', val: '122°' }],
+    desc: 'Formaldehida memiliki atom pusat Karbon terikat ganda pada Oksigen dan tunggal pada dua Hidrogen. Bentuk Trigonal Planar dengan sedikit penyimpangan sudut karena gaya tolakan ikatan rangkap C=O.',
+    atoms: [
+      { x:0, y:0, z:0, r:0.40, color:'#555555', symbol:'C' },
+      { x:0, y:1.3, z:0, r:0.35, color:'#e74c3c', symbol:'O' },
+      { x:-1.0, y:-0.7, z:0, r:0.25, color:'#aaaaaa', symbol:'H' },
+      { x:1.0, y:-0.7, z:0, r:0.25, color:'#aaaaaa', symbol:'H' }
+    ],
+    bonds: [[0,1],[0,2],[0,3]]
+  },
+  "H2O2": {
+    formula: 'H₂O₂', name: 'Hidrogen Peroksida',
+    geo: 'Non-Planar (Hemi-Planar)', axe: 'AX₂E₂', pei: 3, peb: 4,
+    angles: [{ label: 'Sudut H–O–O', val: '94,8°' }],
+    desc: 'Hidrogen Peroksida memiliki struktur rantai terbuka non-planar yang menyerupai buku setengah terbuka. Tolakan dari pasangan bebas oksigen memperkecil sudut H-O-O menjadi 94,8°.',
+    atoms: [
+      { x:-0.7, y:0, z:0, r:0.38, color:'#e74c3c', symbol:'O' },
+      { x:0.7, y:0, z:0, r:0.38, color:'#e74c3c', symbol:'O' },
+      { x:-1.3, y:0.8, z:0.4, r:0.25, color:'#aaaaaa', symbol:'H' },
+      { x:1.3, y:-0.8, z:0.4, r:0.25, color:'#aaaaaa', symbol:'H' }
+    ],
+    bonds: [[0,1],[0,2],[1,3]]
+  },
+  "NO2": {
+    formula: 'NO₂', name: 'Nitrogen Dioksida (NOx)',
+    geo: 'Bengkok (Bent)', axe: 'AX₂E', pei: 2, peb: 1,
+    angles: [{ label: 'Sudut O–N–O', val: '134°' }],
+    desc: 'Nitrogen Dioksida memiliki geometri Bengkok (Bent) dengan tipe AX₂E. Atom pusat Nitrogen memiliki satu elektron bebas tunggal (radikal) pada orbital non-ikatan yang memberikan gaya tolakan kuat pada pasangan elektron ikatan, mendesak sudut ikatan O–N–O menjadi sekitar 134°.',
+    atoms: [
+      { x:0, y:0, z:0, r:0.38, color:'#3498db', symbol:'N' },
+      { x:1.1, y:0.7, z:0, r:0.35, color:'#e74c3c', symbol:'O' },
+      { x:-1.1, y:0.7, z:0, r:0.35, color:'#e74c3c', symbol:'O' }
+    ],
+    bonds: [[0,1],[0,2]],
+    lonePairs: [{ x:0, y:-1.0, z:0 }]
+  },
+  "N2": {
+    formula: 'N₂', name: 'Dinitrogen (Gas Nitrogen)',
+    geo: 'Linear', axe: 'AX', pei: 1, peb: 2,
+    angles: [{ label: 'Linear', val: '180°' }],
+    desc: 'Dinitrogen memiliki geometri Linear murni (AX). Dua atom Nitrogen saling berikatan tiga secara kovalen sangat kuat, menghasilkan molekul diatomik nonpolar yang stabil dengan jarak ikatan pendek dan sudut lurus 180°.',
+    atoms: [
+      { x:-0.65, y:0, z:0, r:0.38, color:'#3498db', symbol:'N' },
+      { x:0.65, y:0, z:0, r:0.38, color:'#3498db', symbol:'N' }
+    ],
+    bonds: [[0,1]]
+  },
+  "NOCl": {
+    formula: 'NOCl', name: 'Nitrosil Klorida',
+    geo: 'Bengkok (Bent)', axe: 'AX₂E', pei: 2, peb: 1,
+    angles: [{ label: 'Sudut O–N–Cl', val: '113°' }],
+    desc: 'Nitrosil Klorida memiliki geometri Bengkok (Bent) dengan tipe AX₂E. Atom pusat Nitrogen terikat secara kovalen dengan atom Oksigen (ikatan ganda) dan Klorin (ikatan tunggal), di mana keberadaan pasangan elektron bebas mendesak sudut ikatan O–N–Cl menyusut menjadi 113°.',
+    atoms: [
+      { x:0, y:0, z:0, r:0.38, color:'#3498db', symbol:'N' },
+      { x:1.0, y:0.7, z:0, r:0.35, color:'#e74c3c', symbol:'O' },
+      { x:-1.2, y:-0.8, z:0, r:0.32, color:'#2ecc71', symbol:'Cl' }
+    ],
+    bonds: [[0,1],[0,2]],
+    lonePairs: [{ x:0, y:-1.0, z:0 }]
   }
 };
 
@@ -257,7 +326,20 @@ const QUIZ_QUESTIONS = [
     question: "Molekul yang tidak memiliki pasangan elektron bebas pada atom pusatnya cenderung bersifat?",
     options: ["Polar", "Non-polar", "Asam", "Basa"],
     answer: 1 
-  }
+  },
+  { 
+  type: "concept", 
+  question: "Pada mode Survival, Aluminium (Al) mampu melindungi besi dari korosi. Konsep ini berkaitan dengan?",
+  options: ["Reaksi Redoks", "Deret Volta", "Hukum Boyle", "Ikatan Hidrogen"],
+  answer: 1 
+},
+
+{
+  type: "concept",
+  question: "Namaku siapaaa????",
+  options : ["Nilam,", "Nina", "Nala", "Angel"],
+  answer: 3
+}
 ];
 
 const ELEMENTS_COLOR = {

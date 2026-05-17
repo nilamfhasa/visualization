@@ -4,10 +4,12 @@
 
 let isBuilderActive = false;
 let activeMolKey = "CH4";
+let currentFormulaAtoms = []; // stores objects like { symbol: 'H', count: 2 }
 
 function initHome() {
   setupHomeEvents();
   buildMolGrid();
+  updateFormulaDisplay(); // Set initial formulator placeholder
   
   // Initial render with a small delay for container stability
   setTimeout(() => {
@@ -37,12 +39,21 @@ function setupHomeEvents() {
   });
 
   document.getElementById('btnClear')?.addEventListener('click', () => clearFormula());
+  
   document.getElementById('btnRender')?.addEventListener('click', () => {
-    const data = getMoleculeData(currentFormula);
+    const data = getMoleculeDataByAtoms(currentFormulaAtoms);
     if (data) {
       drawMolecule(data);
       updateInfoPanelWith(data);
-      showToast('✓ Molekul ditemukan!', false);
+      
+      // Highlight the rendered molecule in the catalog grid
+      const matchedKey = Object.keys(MOLECULES).find(k => MOLECULES[k] === data);
+      if (matchedKey) {
+        activeMolKey = matchedKey;
+        buildMolGrid();
+      }
+      
+      showToast('✓ Molekul berhasil dirender!', false);
     } else {
       showToast('Molekul tidak ditemukan di database', true);
     }
@@ -61,18 +72,119 @@ function setupHomeEvents() {
     });
   });
 
-  // Keyboard number input
+  // Keyboard number and backspace input for builder
   window.addEventListener('keydown', (e) => {
     if (isBuilderActive) {
       if (e.key >= '0' && e.key <= '9') {
         appendFormula(e.key);
       }
       if (e.key === 'Backspace') {
-        currentFormula = currentFormula.slice(0, -1);
-        updateFormulaDisplay();
+        if (currentFormulaAtoms.length > 0) {
+          const last = currentFormulaAtoms[currentFormulaAtoms.length - 1];
+          if (last.count > 1) {
+            last.count--;
+          } else {
+            currentFormulaAtoms.pop();
+          }
+          updateFormulaDisplay();
+        }
       }
     }
   });
+}
+
+function appendFormula(symbol) {
+  // Check if input is a digit (number multiplier)
+  if (/^\d+$/.test(symbol)) {
+    const num = parseInt(symbol, 10);
+    if (currentFormulaAtoms.length > 0 && num > 0) {
+      // Multiply or set the last clicked atom count
+      currentFormulaAtoms[currentFormulaAtoms.length - 1].count = num;
+    }
+  } else {
+    // Check if the last atom clicked was the exact same element
+    if (currentFormulaAtoms.length > 0 && currentFormulaAtoms[currentFormulaAtoms.length - 1].symbol === symbol) {
+      // If same symbol, increment count (e.g. click H 2 times -> H2)
+      currentFormulaAtoms[currentFormulaAtoms.length - 1].count++;
+    } else {
+      // Add new element to formula
+      currentFormulaAtoms.push({ symbol: symbol, count: 1 });
+    }
+  }
+  updateFormulaDisplay();
+}
+
+function clearFormula() {
+  currentFormulaAtoms = [];
+  updateFormulaDisplay();
+  showToast('Formulator dibersihkan', false);
+}
+
+function updateFormulaDisplay() {
+  const display = document.getElementById('formulaDisplay');
+  if (!display) return;
+  if (currentFormulaAtoms.length === 0) {
+    display.innerHTML = '<span style="color: var(--text3); font-size: 14px;">Mulai klik unsur di bawah untuk merakit...</span>';
+    return;
+  }
+  let html = '';
+  currentFormulaAtoms.forEach(atom => {
+    html += atom.symbol;
+    if (atom.count > 1) {
+      html += `<sub>${atom.count}</sub>`;
+    }
+  });
+  display.innerHTML = html;
+}
+
+// Smart composition-based and exact formula matcher
+function getMoleculeDataByAtoms(atomsList) {
+  if (atomsList.length === 0) return null;
+  
+  // 1. Exact string matching (e.g. "H2O")
+  let searchStr = '';
+  atomsList.forEach(atom => {
+    searchStr += atom.symbol;
+    if (atom.count > 1) searchStr += atom.count;
+  });
+  
+  const exactKey = Object.keys(MOLECULES).find(k => k.toLowerCase() === searchStr.toLowerCase());
+  if (exactKey) {
+    return MOLECULES[exactKey];
+  }
+  
+  // 2. Composition matching (e.g. "OH2" matches "H2O")
+  const currentComp = {};
+  atomsList.forEach(atom => {
+    currentComp[atom.symbol] = (currentComp[atom.symbol] || 0) + atom.count;
+  });
+  
+  for (const [key, mol] of Object.entries(MOLECULES)) {
+    const molComp = {};
+    const regex = /([A-Z][a-z]*)(\d*)/g;
+    let match;
+    while ((match = regex.exec(key)) !== null) {
+      const sym = match[1];
+      const count = match[2] ? parseInt(match[2], 10) : 1;
+      molComp[sym] = (molComp[sym] || 0) + count;
+    }
+    
+    // Compare compositions
+    const keys1 = Object.keys(currentComp);
+    const keys2 = Object.keys(molComp);
+    if (keys1.length === keys2.length) {
+      let isMatch = true;
+      for (const k of keys1) {
+        if (currentComp[k] !== molComp[k]) {
+          isMatch = false;
+          break;
+        }
+      }
+      if (isMatch) return mol;
+    }
+  }
+  
+  return null;
 }
 
 function buildMolGrid() {
@@ -107,7 +219,7 @@ function updateInfoPanelWith(mol) {
   const angDiv = document.getElementById('infoAngles');
   if (angDiv && mol.angles) {
     angDiv.innerHTML = mol.angles.map(a =>
-      `<div class="angle-row"><span class="angle-label">${a.label}</span><span class="angle-val">${a.val}</span></div>`
+      `<div class="angle-row"><span class="angle-label">${a.label}</span> : <span class="angle-val">${a.val}</span></div>`
     ).join('');
   }
 }

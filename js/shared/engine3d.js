@@ -9,6 +9,8 @@ let autoRotate = true;
 // Quiz global vars
 let qScene, qCamera, qRenderer, qMolGroup;
 let lastInteractTime = 0;
+let qAutoRotate = true;
+let qLastInteractTime = 0;
 
 function initEngine3D() {
   const container = document.getElementById('viewerCanvas');
@@ -130,7 +132,7 @@ function initEngine3D() {
     }
     
     // Rotate Quiz
-    if (qMolGroup) {
+    if (qMolGroup && (qAutoRotate || (now - qLastInteractTime > 3000))) {
       qMolGroup.rotation.y += 0.005;
     }
     
@@ -183,6 +185,7 @@ function initQuizEngine() {
   qRenderer.setPixelRatio(window.devicePixelRatio);
   qRenderer.setClearColor(0x000000, 0);
   container.appendChild(qRenderer.domElement);
+  qRenderer.domElement.style.cursor = 'grab';
   
   const ambient = new THREE.AmbientLight(0xffffff, 0.7);
   qScene.add(ambient);
@@ -192,6 +195,64 @@ function initQuizEngine() {
   
   qMolGroup = new THREE.Group();
   qScene.add(qMolGroup);
+
+  // Interaction for Quiz 3D Viewer
+  let qIsDragging = false, qPrevX = 0, qPrevY = 0;
+
+  qRenderer.domElement.addEventListener('mousedown', (e) => {
+    qIsDragging = true;
+    qAutoRotate = false;
+    qPrevX = e.clientX;
+    qPrevY = e.clientY;
+    qRenderer.domElement.style.cursor = 'grabbing';
+  });
+
+  window.addEventListener('mouseup', () => {
+    qIsDragging = false;
+    if (qRenderer && qRenderer.domElement) {
+      qRenderer.domElement.style.cursor = 'grab';
+    }
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!qIsDragging || !qMolGroup) return;
+    const dx = e.clientX - qPrevX;
+    const dy = e.clientY - qPrevY;
+    qMolGroup.rotation.y += dx * 0.01;
+    qMolGroup.rotation.x += dy * 0.01;
+    qPrevX = e.clientX;
+    qPrevY = e.clientY;
+    qLastInteractTime = Date.now();
+  });
+
+  // Touch support for Quiz 3D Viewer
+  qRenderer.domElement.addEventListener('touchstart', (e) => {
+    qIsDragging = true;
+    qAutoRotate = false;
+    qPrevX = e.touches[0].clientX;
+    qPrevY = e.touches[0].clientY;
+  });
+
+  window.addEventListener('touchend', () => { qIsDragging = false; });
+  window.addEventListener('touchmove', (e) => {
+    if (!qIsDragging || !qMolGroup) return;
+    const dx = e.touches[0].clientX - qPrevX;
+    const dy = e.touches[0].clientY - qPrevY;
+    qMolGroup.rotation.y += dx * 0.01;
+    qMolGroup.rotation.x += dy * 0.01;
+    qPrevX = e.touches[0].clientX;
+    qPrevY = e.touches[0].clientY;
+    qLastInteractTime = Date.now();
+  });
+
+  // Zoom for Quiz 3D Viewer
+  qRenderer.domElement.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const zoomSpeed = 0.005;
+    qCamera.position.z = Math.max(2.5, Math.min(12, qCamera.position.z + e.deltaY * zoomSpeed));
+    qAutoRotate = false;
+    qLastInteractTime = Date.now();
+  }, { passive: false });
 }
 
 // Function to manually refresh quiz renderer size

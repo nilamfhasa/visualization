@@ -195,3 +195,118 @@
 
 .fs-btn { pointer-events: auto; background: none; border: 1px solid var(--border); color: var(--text3); cursor: pointer; border-radius: 4px; }
 .fs-btn:hover { color: var(--cyan); border-color: var(--cyan); }
+
+/* MOBILE RESPONSIVE CANVAS & ON-SCREEN CONTROLS */
+@media (max-width: 900px) {
+  #gameCanvas {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 700px;
+    max-height: 85vh;
+  }
+  .canvas-wrapper {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+  .game-container {
+    margin: 10px auto;
+    border-radius: 12px;
+  }
+}
+
+/* TOUCH CONTROLS FOR MOBILE */
+.touch-controls {
+  display: none;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 99;
+}
+
+.touch-left-side, .touch-right-side {
+  display: flex;
+  gap: 15px;
+  pointer-events: auto;
+}
+
+.touch-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: rgba(20, 25, 35, 0.7);
+  border: 2px solid var(--border);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
+}
+
+.touch-btn:active {
+  background: var(--cyan-dim);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-glow);
+  transform: scale(0.9);
+}
+
+#touchSwap {
+  background: rgba(0, 246, 255, 0.15);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  font-size: 18px;
+  font-family: var(--mono);
+}
+
+#touchJump {
+  background: rgba(241, 196, 15, 0.15);
+  border-color: #f1c40f;
+  color: #f1c40f;
+}
+
+@media (max-width: 900px) {
+  .touch-controls {
+    display: flex;
+  }
+}
+
+/* PORTRAIT ORIENTATION WARNING FOR MOBILE */
+.orientation-warning {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #080c14;
+  z-index: 99999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  color: white;
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  .orientation-warning {
+    display: flex;
+  }
+}
+
+@keyframes rotate-pulse {
+  0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+  50% { transform: scale(1.1) rotate(15deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+}

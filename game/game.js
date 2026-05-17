@@ -33,18 +33,20 @@ const levels = [
     molecule: "Fe",
     start: { x: 50, y: 530 },
     platforms: [
-      { x: 0, y: 580, w: 220, h: 50, type: 'stone' },
-      { x: 220, y: 580, w: 330, h: 50, type: 'water', label: 'H2O' },
-      { x: 550, y: 580, w: 250, h: 50, type: 'stone' },
+      { x: 0, y: 580, w: 220, h: 50, type: 'stone' }, //lantai satu kiri
+      { x: 220, y: 580, w: 330, h: 50, type: 'water', label: 'H2O' }, //air
+      { x: 550, y: 580, w: 250, h: 50, type: 'stone' },//lantai 1 kanan
+
       { x: 100, y: 490, w: 80, h: 15, type: 'wood' },   // Tangga 1 (90px dari Dasar)
       { x: 220, y: 420, w: 80, h: 15, type: 'wood' },   // Tangga 2 (70px antar Wood)
+
+      { x: 640, y: 490, w: 80, h: 15, type: 'wood' },   // Rescue Step Kanan //kanan
+      { x: 500, y: 420, w: 80, h: 15, type: 'wood' },   // Rescue Step Kanan //kiri
 
       { x: 0, y: 330, w: 220, h: 20, type: 'stone' },   // [LANTAI 2] Kiri (90px dari Wood)
       { x: 320, y: 330, w: 120, h: 20, type: 'wood' },  // [LANTAI 2] Jembatan
       { x: 550, y: 330, w: 250, h: 20, type: 'stone' }, // [LANTAI 2] Kanan
 
-      { x: 640, y: 490, w: 80, h: 15, type: 'wood' },   // Rescue Step Kanan
-      { x: 500, y: 420, w: 80, h: 15, type: 'wood' },   // Rescue Step Kanan
       { x: 100, y: 240, w: 80, h: 15, type: 'wood' },   // Tangga 3 (90px dari Lantai 2)
       { x: 220, y: 170, w: 80, h: 15, type: 'wood' },   // Tangga 4 (70px antar Wood)
 
@@ -794,9 +796,9 @@ function update() {
 
   if (player.x < curLvlData.exit.x + curLvlData.exit.w && player.x + player.w > curLvlData.exit.x &&
     player.y < curLvlData.exit.y + curLvlData.exit.h && player.y + player.h > curLvlData.exit.y) {
-    if (currentLevel < levels.length - 1) { 
-      currentLevel++; 
-      showToast("LEVEL COMPLETE!"); 
+    if (currentLevel < levels.length - 1) {
+      currentLevel++;
+      showToast("LEVEL COMPLETE!");
       loadLevel(currentLevel, true); // Keep the speedrun timer running continuously!
     } else {
       gameActive = false;
@@ -804,7 +806,7 @@ function update() {
       let grade = "B";
       if (finishTime < 55) grade = "S";
       else if (finishTime < 85) grade = "A";
-      
+
       showCongratsModal(finishTime, grade);
     }
   }
@@ -1156,13 +1158,42 @@ function spawnParticles(x, y, color, count = 20) {
     particles.push({ x, y, vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8, size: Math.random() * 3 + 2, color, life: 1.0 });
   }
 }
-function showToast(msg, isErr) { let t = document.createElement('div'); Object.assign(t.style, { position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)', background: isErr ? '#c0392b' : '#2c3e50', color: '#fff', padding: '10px 20px', borderRadius: '5px', zIndex: '10000' }); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2000); }
+function showToast(msg, isErr) { 
+  let t = document.createElement('div'); 
+  Object.assign(t.style, { 
+    position: 'fixed', 
+    bottom: '25px', 
+    left: '50%', 
+    transform: 'translateX(-50%)', 
+    background: isErr ? 'rgba(192, 57, 43, 0.65)' : 'rgba(8, 12, 20, 0.65)', 
+    border: isErr ? '1px solid rgba(192, 57, 43, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)',
+    backdropFilter: 'blur(5px)',
+    webkitBackdropFilter: 'blur(5px)',
+    color: isErr ? '#ff6b6b' : '#00d2ff', 
+    padding: '6px 14px', 
+    borderRadius: '20px', 
+    zIndex: '10000',
+    fontFamily: "'Space Mono', monospace",
+    fontSize: '11px',
+    fontWeight: 'bold',
+    boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+    pointerEvents: 'none',
+    opacity: '0.85',
+    transition: 'opacity 0.2s'
+  }); 
+  t.textContent = msg; 
+  document.body.appendChild(t); 
+  setTimeout(() => {
+    t.style.opacity = '0';
+    setTimeout(() => t.remove(), 200);
+  }, 1800); 
+}
 
 function gameLoop() { update(); draw(); if (gameActive) requestAnimationFrame(gameLoop); }
 
 window.addEventListener('keydown', e => {
   if (!gameActive) return;
-  
+
   // Instant Spacebar Speedrun Restart (Level 1, Time = 0)
   if (e.key === ' ') {
     currentLevel = 0;
@@ -1173,7 +1204,7 @@ window.addEventListener('keydown', e => {
   }
 
   if (player.stun > 0 || player.ignorePlatforms > 0) return;
-  
+
   let key = e.key.toLowerCase();
   let mult = (player.drunkTimer > 0) ? -1 : 1;
   if (e.key === 'ArrowRight' || key === 'd') player.vx = player.speed * mult;
@@ -1203,10 +1234,10 @@ window.addEventListener('keydown', e => {
     }
   }
 });
-window.addEventListener('keyup', e => { 
-  if (player.ignorePlatforms > 0) return; 
+window.addEventListener('keyup', e => {
+  if (player.ignorePlatforms > 0) return;
   let key = e.key.toLowerCase();
-  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || key === 'd' || key === 'a') player.vx = 0; 
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || key === 'd' || key === 'a') player.vx = 0;
 });
 
 function showCongratsModal(finishTime, grade) {
@@ -1280,7 +1311,7 @@ function showCongratsModal(finishTime, grade) {
   let tierTitle = 'Contaminated Matter';
   if (grade === 'S') { tierColor = '#2ecc71'; tierTitle = 'Chemical Architect'; }
   else if (grade === 'A') { tierColor = '#3498db'; tierTitle = 'Precision Synthesizer'; }
-  
+
   tierBox.innerHTML = `<span style="font-size:12px;color:#7f8c8d;display:block;">TIER / GRADE</span>
                        <span style="font-size:32px;font-weight:bold;color:${tierColor};text-shadow:0 0 10px ${tierColor}88;">${grade}</span>`;
 
@@ -1331,4 +1362,66 @@ function showCongratsModal(finishTime, grade) {
   document.head.appendChild(style);
 
   document.getElementById('gameContainer').appendChild(overlay);
+}
+
+// ON-SCREEN TOUCH CONTROLS FOR MOBILE
+const tLeft = document.getElementById('touchLeft');
+const tRight = document.getElementById('touchRight');
+const tJump = document.getElementById('touchJump');
+const tSwap = document.getElementById('touchSwap');
+
+if (tLeft && tRight && tJump && tSwap) {
+  const getMult = () => (player.drunkTimer > 0) ? -1 : 1;
+
+  // Touch Left
+  tLeft.addEventListener('touchstart', e => {
+    e.preventDefault();
+    if (!gameActive || player.stun > 0 || player.ignorePlatforms > 0) return;
+    player.vx = -player.speed * getMult();
+  });
+  tLeft.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (player.ignorePlatforms > 0) return;
+    player.vx = 0;
+  });
+  tLeft.addEventListener('touchcancel', e => {
+    e.preventDefault();
+    player.vx = 0;
+  });
+
+  // Touch Right
+  tRight.addEventListener('touchstart', e => {
+    e.preventDefault();
+    if (!gameActive || player.stun > 0 || player.ignorePlatforms > 0) return;
+    player.vx = player.speed * getMult();
+  });
+  tRight.addEventListener('touchend', e => {
+    e.preventDefault();
+    if (player.ignorePlatforms > 0) return;
+    player.vx = 0;
+  });
+  tRight.addEventListener('touchcancel', e => {
+    e.preventDefault();
+    player.vx = 0;
+  });
+
+  // Touch Jump
+  tJump.addEventListener('touchstart', e => {
+    e.preventDefault();
+    if (!gameActive || player.stun > 0 || player.ignorePlatforms > 0) return;
+    if (player.grounded) {
+      player.vy = player.jump;
+    }
+  });
+
+  // Touch Swap
+  tSwap.addEventListener('touchstart', e => {
+    e.preventDefault();
+    if (!gameActive) return;
+    if (curLvlData.inventory && curLvlData.inventory.length > 0) {
+      let idx = curLvlData.inventory.indexOf(activeMolecule);
+      activeMolecule = curLvlData.inventory[(idx + 1) % curLvlData.inventory.length];
+      showToast("SWAP: " + activeMolecule);
+    }
+  });
 }
