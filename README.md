@@ -1,10 +1,10 @@
-# 🧪 VSEPR 3D Explorer — Panduan Sains Interaktif 🚀✨
+# 🧪 ChemWeave 3D — Panduan Sains Interaktif 🚀✨
 
 [![Version](https://img.shields.io/badge/version-2.0.0-00e5cc?style=for-the-badge)](https://github.com/)
 [![Tech Stack](https://img.shields.io/badge/Tech_Stack-HTML5_|_CSS3_|_Three.js-a855f7?style=for-the-badge)](https://threejs.org/)
 [![UI Design](https://img.shields.io/badge/Design-Glassmorphism_|_Premium_Dark-00e5cc?style=for-the-badge)](https://threejs.org/)
 
-Selamat datang di **VSEPR 3D Explorer**! Platform edukasi kimia modern yang membawa teori **VSEPR (Valence Shell Electron Pair Repulsion)** keluar dari buku teks membosankan dan mengubahnya menjadi petualangan visual 3D yang interaktif, menyenangkan, dan super responsif! 🎓🔬
+Selamat datang di **ChemWeave 3D**! Platform edukasi kimia modern yang membawa teori **VSEPR (Valence Shell Electron Pair Repulsion)** keluar dari buku teks membosankan dan mengubahnya menjadi petualangan visual 3D yang interaktif, menyenangkan, dan super responsif! 🎓🔬
 
 ---
 
@@ -45,7 +45,7 @@ Platform ini dirancang dengan navigasi yang sangat mulus. Berikut cara mengakses
 
 ---
 
-### 🎮 4. Molecule Mayhem (Halaman Game)
+### 🎮 4. Molecular Adventure (Halaman Game)
 > **Cara Akses**: Klik menu **Game** pada navbar atas, atau buka langsung [game/index.html](file:///Users/macbookpro/Documents/Jokian/vsepr-3d-explorer/game/index.html).
 
 *   **Fitur Unggulan**:
