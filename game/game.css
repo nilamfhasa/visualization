@@ -310,3 +310,94 @@
   50% { transform: scale(1.1) rotate(15deg); opacity: 1; }
   100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
 }
+
+/* RESPONSIVE GAME OVERLAYS FOR MOBILE LANDSCAPE (max-height: 500px) */
+@media (max-height: 500px) {
+  .game-overlay {
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+  }
+  
+  .overlay-content {
+    margin: 0 auto !important;
+  }
+
+  #guideScreen {
+    height: 92% !important;
+    width: 94% !important;
+    max-height: none !important;
+    max-width: none !important;
+    padding: 10px 20px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
+  }
+  #guideScreen.hidden {
+    display: none !important;
+  }
+  #guideScreen h2 {
+    font-size: 14px !important;
+    margin-top: 0 !important;
+    margin-bottom: 6px !important;
+    letter-spacing: 1px !important;
+    flex-shrink: 0 !important;
+    text-align: center !important;
+  }
+  #guideScreen .guide-content-wrapper {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px 15px !important;
+    margin-bottom: 6px !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    flex-grow: 1 !important;
+  }
+  #guideScreen .guide-content-wrapper > div {
+    gap: 6px !important;
+    font-size: 9px !important;
+    line-height: 1.25 !important;
+  }
+  #guideScreen .guide-content-wrapper > div > div {
+    text-align: justify !important;
+  }
+  #guideScreen .guide-content-wrapper > div span {
+    font-size: 12px !important;
+  }
+  #guideScreen .start-btn {
+    margin-top: 2px !important;
+    padding: 6px 15px !important;
+    font-size: 10px !important;
+    flex-shrink: 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Intro Screen (Step 1) */
+  #introScreen.hidden {
+    display: none !important;
+  }
+  #introScreen h1 {
+    font-size: 20px !important;
+    margin-top: 0 !important;
+    margin-bottom: 4px !important;
+  }
+  #introScreen p {
+    margin-bottom: 10px !important;
+    font-size: 10px !important;
+  }
+  #playerNameInput {
+    margin-bottom: 10px !important;
+    padding: 6px 15px !important;
+    font-size: 12px !important;
+    width: 200px !important;
+  }
+  #btnNext {
+    padding: 6px 15px !important;
+    font-size: 11px !important;
+  }
+}
